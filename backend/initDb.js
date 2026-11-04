@@ -19,11 +19,12 @@ const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/foodshar
 
 async function initDatabase() {
   try {
-    console.log(`Connecting to MongoDB Compass local instance at: ${MONGO_URI}...`);
-    const conn = await mongoose.connect(MONGO_URI);
+    const safeUri = MONGO_URI.includes('@') ? MONGO_URI.split('@')[1] : MONGO_URI;
+    console.log(`Connecting to database at: ${safeUri}...`);
+    const conn = await mongoose.connect(MONGO_URI, { dbName: 'foodshare' });
     const db = conn.connection.db;
 
-    console.log(`[Connected] Database Name: "${db.databaseName}" on 127.0.0.1:27017`);
+    console.log(`[Connected] Database Name: "${db.databaseName}" on ${conn.connection.host}`);
 
     // 1. Remove all dummy / unwanted records
     console.log('\n[1/3] Removing unwanted/dummy data from collections...');

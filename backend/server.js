@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const connectDB = require('./config/db');
 

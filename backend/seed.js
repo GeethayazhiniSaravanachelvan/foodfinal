@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
 const User = require('./models/User');
 const FoodListing = require('./models/FoodListing');
 const DonationRequest = require('./models/DonationRequest');
 const Notification = require('./models/Notification');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const seedData = async () => {
   try {
     const connUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/foodshare';
-    await mongoose.connect(connUri);
+    await mongoose.connect(connUri, { dbName: 'foodshare' });
     console.log('[Seed] Connected to MongoDB...');
 
     // Clear existing collections

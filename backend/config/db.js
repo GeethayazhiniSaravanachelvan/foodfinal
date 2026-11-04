@@ -1,6 +1,11 @@
+const path = require('path');
+const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
-// Reduce buffer timeout so requests fail fast instead of hanging 10 seconds
+// Ensure environment variables are loaded
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+
+// Reduce buffer timeout so requests fail fast instead of hanging indefinitely
 mongoose.set('bufferTimeoutMS', 3000);
 
 let retryTimer = null;
@@ -9,12 +14,27 @@ let isConnecting = false;
 function getNormalizedUri() {
   let connUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/foodshare';
 
-  // Force IPv4 127.0.0.1 to avoid Windows IPv6 (::1) localhost resolution timeout
+  // Handle MongoDB Atlas URIs (mongodb+srv://)
+  if (connUri.startsWith('mongodb+srv://')) {
+    const urlParts = connUri.split('?');
+    let base = urlParts[0];
+    const query = urlParts[1] ? `?${urlParts[1]}` : '?retryWrites=true&w=majority';
+
+    // Ensure database name 'foodshare' is specified in path
+    if (base.endsWith('/')) {
+      base += 'foodshare';
+    } else if (!base.includes('.mongodb.net/')) {
+      base += '/foodshare';
+    }
+    return `${base}${query}`;
+  }
+
+  // Force IPv4 127.0.0.1 for local MongoDB to avoid Windows IPv6 (::1) localhost resolution timeout
   if (connUri.includes('localhost:27017')) {
     connUri = connUri.replace('localhost:27017', '127.0.0.1:27017');
   }
 
-  // Standalone MongoDB needs directConnection=true to prevent replica set discovery delay
+  // Standalone local MongoDB needs directConnection=true to prevent replica set discovery delay
   if (connUri.includes('127.0.0.1:27017') && !connUri.includes('directConnection')) {
     connUri += (connUri.includes('?') ? '&' : '?') + 'directConnection=true';
   }
@@ -31,16 +51,24 @@ const connectDB = async (attempt = 1) => {
   isConnecting = true;
 
   const connUri = getNormalizedUri();
+  // Mask credentials in logs
   const safeLogUri = connUri.includes('@') ? connUri.split('@')[1] : connUri;
+  const isAtlas = connUri.startsWith('mongodb+srv://');
 
   try {
     console.log(`[Database] Connecting to MongoDB (attempt ${attempt}) at: ${safeLogUri}...`);
 
-    const conn = await mongoose.connect(connUri, {
-      serverSelectionTimeoutMS: 4000,
+    const connectOptions = {
+      dbName: 'foodshare',
+      serverSelectionTimeoutMS: isAtlas ? 10000 : 5000,
       socketTimeoutMS: 45000,
-      family: 4, // Force IPv4
-    });
+    };
+
+    if (!isAtlas) {
+      connectOptions.family = 4; // Force IPv4 for local MongoDB
+    }
+
+    const conn = await mongoose.connect(connUri, connectOptions);
 
     console.log(`[Database] MongoDB Connected: ${conn.connection.host}/${conn.connection.name}`);
     isConnecting = false;
@@ -54,15 +82,15 @@ const connectDB = async (attempt = 1) => {
   } catch (error) {
     isConnecting = false;
     console.error(`[Database Error] Connection attempt ${attempt} failed: ${error.message}`);
-    console.warn(`[Database Warning] Please ensure MongoDB is running or check your MONGODB_URI in backend/.env`);
+    console.warn(`[Database Warning] Please verify MONGODB_URI in backend/.env`);
 
     // Schedule background retry
     if (!retryTimer) {
-      console.log('[Database] Scheduling automatic reconnection in 2.5 seconds...');
+      console.log('[Database] Scheduling automatic reconnection in 3 seconds...');
       retryTimer = setTimeout(() => {
         retryTimer = null;
         connectDB(attempt + 1);
-      }, 2500);
+      }, 3000);
     }
 
     return null;
@@ -76,7 +104,7 @@ mongoose.connection.on('disconnected', () => {
     retryTimer = setTimeout(() => {
       retryTimer = null;
       connectDB();
-    }, 2500);
+    }, 3000);
   }
 });
 

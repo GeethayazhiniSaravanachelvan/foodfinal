@@ -8,13 +8,18 @@ const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/foodshar
 
 async function verifyDatabase() {
   try {
-    console.log(`Connecting to: ${MONGO_URI}`);
-    await mongoose.connect(MONGO_URI);
+    const safeUri = MONGO_URI.includes('@') ? MONGO_URI.split('@')[1] : MONGO_URI;
+    console.log(`Connecting to: ${safeUri}`);
+
+    await mongoose.connect(MONGO_URI, {
+      dbName: 'foodshare',
+      serverSelectionTimeoutMS: 10000,
+    });
     const db = mongoose.connection.db;
 
     console.log(`\n======================================================`);
     console.log(` Database: ${db.databaseName}`);
-    console.log(` Host: 127.0.0.1:27017 (MongoDB Compass)`);
+    console.log(` Host: ${mongoose.connection.host}`);
     console.log(`======================================================\n`);
 
     const requiredCollections = ['users', 'foodlistings', 'donationrequests', 'notifications'];
@@ -23,7 +28,7 @@ async function verifyDatabase() {
     for (const name of requiredCollections) {
       const exists = existingCollections.includes(name);
       if (!exists) {
-        console.log(`[FAIL] Missing collection: ${name}`);
+        console.log(`[STATUS] Collection '${name}': not yet created`);
         continue;
       }
       const count = await db.collection(name).countDocuments();
@@ -36,23 +41,21 @@ async function verifyDatabase() {
       console.log('');
     }
 
-    // Verify sample user password hashing
-    const sampleUser = await db.collection('users').findOne({ email: 'donor@foodshare.ai' });
+    // Verify sample user password hashing if users exist
+    const sampleUser = await db.collection('users').findOne({});
     if (sampleUser) {
       console.log('Sample User Verification:');
-      console.log(`  Email: ${sampleUser.email}`);
       console.log(`  Role: ${sampleUser.role}`);
-      console.log(`  Password starts with bcrypt hash ($2): ${sampleUser.password.startsWith('$2')}`);
+      console.log(`  Password starts with bcrypt hash ($2): ${sampleUser.password ? sampleUser.password.startsWith('$2') : false}`);
       console.log(`  Location Type: ${sampleUser.location?.type}, Coordinates: [${sampleUser.location?.coordinates}]`);
     }
 
     await mongoose.disconnect();
     console.log('\n[SUCCESS] Verification completed successfully.');
   } catch (err) {
-    console.error('Verification Error:', err);
+    console.error('Verification Error:', err.message);
     process.exit(1);
   }
 }
 
 verifyDatabase();
-
