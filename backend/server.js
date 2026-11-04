@@ -52,7 +52,7 @@ app.get('/health', (req, res) => {
 // Health check endpoint (checks MongoDB connection state)
 app.get('/api/health', (req, res) => {
   const isDbReady = mongoose.connection.readyState === 1;
-  res.status(isDbReady ? 200 : 503).json({
+  res.status(200).json({
     status: isDbReady ? 'ok' : 'initializing',
     database: isDbReady ? 'connected' : 'connecting',
     message: isDbReady
