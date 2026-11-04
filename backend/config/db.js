@@ -51,7 +51,7 @@ const connectDB = async (attempt = 1) => {
   isConnecting = true;
 
   const connUri = getNormalizedUri();
-  // Mask credentials in logs
+  // Mask credentials in logs: only display domain/database
   const safeLogUri = connUri.includes('@') ? connUri.split('@')[1] : connUri;
   const isAtlas = connUri.startsWith('mongodb+srv://');
 
@@ -60,11 +60,13 @@ const connectDB = async (attempt = 1) => {
 
     const connectOptions = {
       dbName: 'foodshare',
-      serverSelectionTimeoutMS: isAtlas ? 10000 : 5000,
+      serverSelectionTimeoutMS: isAtlas ? 15000 : 5000,
       socketTimeoutMS: 45000,
     };
 
-    if (!isAtlas) {
+    if (isAtlas) {
+      connectOptions.tls = true;
+    } else {
       connectOptions.family = 4; // Force IPv4 for local MongoDB
     }
 
@@ -82,15 +84,21 @@ const connectDB = async (attempt = 1) => {
   } catch (error) {
     isConnecting = false;
     console.error(`[Database Error] Connection attempt ${attempt} failed: ${error.message}`);
-    console.warn(`[Database Warning] Please verify MONGODB_URI in backend/.env`);
 
-    // Schedule background retry
+    if (error.message.includes('whitelist') || error.message.includes('SSL') || error.message.includes('Could not connect to any servers')) {
+      console.warn(`[Database Security Notice] MongoDB Atlas rejected the connection. This almost always indicates that your server IP address is not whitelisted. In MongoDB Atlas, go to "Network Access" and ensure "0.0.0.0/0" (Allow Access from Anywhere) is active.`);
+    } else {
+      console.warn(`[Database Warning] Please check MONGODB_URI configuration in your deployment environment or backend/.env`);
+    }
+
+    // Schedule background retry with slight backoff
     if (!retryTimer) {
-      console.log('[Database] Scheduling automatic reconnection in 3 seconds...');
+      const delayMs = Math.min(3000 * Math.pow(1.2, Math.min(attempt, 5)), 10000);
+      console.log(`[Database] Scheduling automatic reconnection in ${Math.round(delayMs / 1000)} seconds...`);
       retryTimer = setTimeout(() => {
         retryTimer = null;
         connectDB(attempt + 1);
-      }, 3000);
+      }, delayMs);
     }
 
     return null;
