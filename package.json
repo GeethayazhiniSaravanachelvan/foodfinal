@@ -1,0 +1,21 @@
+{
+  "name": "foodshare",
+  "version": "1.0.0",
+  "description": "Foodshare - Food Donation and Intelligent Matching System",
+  "scripts": {
+    "start": "node start.js",
+    "init-db": "cd backend && node initDb.js",
+    "setup": "npm run setup:backend && npm run setup:ml",
+    "setup:backend": "cd backend && npm install",
+    "setup:ml": "cd ml && pip install -r requirements.txt"
+  },
+  "keywords": [
+    "food-donation",
+    "ai-matching",
+    "food-waste",
+    "fastapi",
+    "express"
+  ],
+  "author": "Foodshare Team",
+  "license": "MIT"
+}

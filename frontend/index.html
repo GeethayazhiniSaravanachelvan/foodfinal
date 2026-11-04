@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foodshare – Surplus Food Redistribution Platform</title>
+  <meta name="description" content="Foodshare connects surplus food donors with local recipients, shelters, and families to minimize waste and feed communities." />
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core CSS -->
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container" style="display: flex; justify-content: space-between; align-items: center;">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <span>Foodshare</span>
+      </a>
+
+      <!-- Only Sign In and Sign Up actions -->
+      <div class="nav-actions" id="nav-actions">
+        <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero & Explanation Section -->
+  <section class="hero-section" style="padding: 4.5rem 0 4rem; background: linear-gradient(180deg, rgba(216, 243, 220, 0.45) 0%, rgba(248, 250, 248, 1) 100%);">
+    <div class="container" style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 3rem; align-items: center;">
+      <div>
+        <div class="badge badge-emerald" style="margin-bottom: 1.25rem;">
+          🌱 Intelligent Surplus Food Redistribution
+        </div>
+        <h1 style="margin-bottom: 1.25rem; font-size: 2.75rem; line-height: 1.15;">
+          Turn Surplus Food into Community Nourishment with <span style="color: var(--primary-700);">Foodshare</span>.
+        </h1>
+        <p style="font-size: 1.15rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.65;">
+          Foodshare is a dedicated community platform connecting surplus food donors—restaurants, bakeries, grocery stores, and households—directly with local recipients, shelters, and food pantries. We make surplus food rescue fast, verified, and effortless.
+        </p>
+
+        <!-- Primary Call-to-Actions: Sign Up and Sign In -->
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+          <a href="register.html" class="btn btn-primary btn-lg" style="padding: 0.85rem 1.75rem; font-size: 1.05rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            Sign Up
+          </a>
+          <a href="login.html" class="btn btn-outline btn-lg" style="padding: 0.85rem 1.75rem; font-size: 1.05rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </a>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1.75rem; font-size: 0.88rem; color: var(--text-muted);">
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Free for all participants</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Zero food waste mission</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="position: relative;">
+        <div style="border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-xl); border: 4px solid white;">
+          <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=900&q=80" alt="Food Donation Community" style="width: 100%; height: 420px; object-fit: cover;" />
+        </div>
+        <!-- Floating Highlight Badge -->
+        <div style="position: absolute; bottom: -20px; left: -20px; background: white; padding: 1.15rem 1.35rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--border-light); max-width: 270px;">
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+            <span class="badge badge-emerald">✨ Active Rescue</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">1.2 km away</span>
+          </div>
+          <div style="font-weight: 700; font-size: 0.92rem; color: var(--primary-900);">Fresh Meals & Bakery</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">Shared with local families</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explanation of the Platform -->
+  <section style="padding: 4.5rem 0; background: white; border-top: 1px solid var(--border-light);">
+    <div class="container">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto 3.5rem;">
+        <div class="badge badge-teal" style="margin-bottom: 0.75rem;">How It Works</div>
+        <h2 style="font-size: 2rem; margin-bottom: 0.75rem;">Connecting Food Surplus with Community Need</h2>
+        <p style="color: var(--text-muted); font-size: 1.05rem;">
+          Every day, good edible food goes unused while community members face hunger. Foodshare bridges this gap in three simple steps.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+        <!-- Card 1 -->
+        <div class="card" style="padding: 2rem; text-align: left; background: var(--bg-surface-alt); border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--primary-100); color: var(--primary-800); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; font-weight: 800; font-size: 1.35rem;">
+            🏪
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.65rem; color: var(--primary-900);">1. Donors Post Surplus</h3>
+          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
+            Restaurants, bakeries, markets, and caterers list surplus meals or groceries in seconds with portions, expiry deadlines, and pickup instructions.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card" style="padding: 2rem; text-align: left; background: var(--bg-surface-alt); border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--primary-100); color: var(--primary-800); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; font-weight: 800; font-size: 1.35rem;">
+            🤝
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.65rem; color: var(--primary-900);">2. Recipients Request Food</h3>
+          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
+            Local shelters, food pantries, and individuals discover active food donations nearby and request portions directly with transparent status tracking.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card" style="padding: 2rem; text-align: left; background: var(--bg-surface-alt); border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--primary-100); color: var(--primary-800); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; font-weight: 800; font-size: 1.35rem;">
+            ♻️
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.65rem; color: var(--primary-900);">3. Zero Waste Handshake</h3>
+          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
+            Food is collected safely during the designated pickup window. Nutritious food feeds people instead of decomposing in landfills.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Action Callout Box -->
+      <div style="margin-top: 3.5rem; background: linear-gradient(135deg, var(--primary-800), var(--primary-900)); color: white; padding: 2.75rem 2rem; border-radius: var(--radius-xl); text-align: center; box-shadow: var(--shadow-lg);">
+        <h3 style="font-size: 1.75rem; color: white; margin-bottom: 0.75rem;">Get Started with Foodshare</h3>
+        <p style="max-width: 550px; margin: 0 auto 1.75rem; color: var(--primary-100); font-size: 1.05rem;">
+          Whether you want to donate surplus food or find nourishment for your community, create your free account today.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <a href="register.html" class="btn btn-secondary btn-lg" style="background: white; color: var(--primary-900); font-weight: 700; padding: 0.75rem 1.75rem;">
+            Create an Account (Sign Up)
+          </a>
+          <a href="login.html" class="btn btn-outline btn-lg" style="border-color: rgba(255,255,255,0.6); color: white; padding: 0.75rem 1.75rem;">
+            Sign In to Existing Account
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clean Minimal Footer -->
+  <footer style="background: var(--primary-900); color: var(--primary-200); padding: 2rem 0; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem;">
+      <div style="display: flex; align-items: center; gap: 0.6rem; color: white; font-weight: 700;">
+        <div class="brand-icon" style="width: 28px; height: 28px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
+        </div>
+        <span>Foodshare</span>
+      </div>
+      <div>
+        &copy; 2026 Foodshare. Turning surplus food into community nourishment.
+      </div>
+      <div style="display: flex; gap: 1.25rem;">
+        <a href="login.html" style="color: var(--primary-200); text-decoration: none;">Sign In</a>
+        <a href="register.html" style="color: var(--primary-200); text-decoration: none;">Sign Up</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Keep nav clean: show Sign In and Sign Up, or if logged in, add quick link to Dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = window.FOODSHARE_AUTH?.getUser();
+      const navActions = document.getElementById('nav-actions');
+      if (user && navActions) {
+        const dashboardUrl = user.role === 'donor' ? 'donor-dashboard.html' : 'recipient-dashboard.html';
+        navActions.innerHTML = `
+          <a href="${dashboardUrl}" class="btn btn-secondary btn-sm">Dashboard</a>
+          <button id="nav-logout-btn" class="btn btn-outline btn-sm">Sign Out</button>
+        `;
+        document.getElementById('nav-logout-btn')?.addEventListener('click', () => {
+          window.FOODSHARE_AUTH.logout();
+          window.location.reload();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

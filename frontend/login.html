@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – Foodshare</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
+        </div>
+        <span>Foodshare</span>
+      </a>
+      <div class="nav-actions">
+        <span style="font-size: 0.9rem; color: var(--text-muted);">Don't have an account?</span>
+        <a href="register.html" class="btn btn-outline btn-sm">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auth Layout -->
+  <main class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to your Foodshare account</p>
+      </div>
+
+      <!-- Role Selection Toggle -->
+      <div class="role-selector" id="login-role-selector">
+        <button type="button" class="role-tab-btn active" data-role="donor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Food Donor
+        </button>
+        <button type="button" class="role-tab-btn" data-role="recipient">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          Recipient
+        </button>
+      </div>
+
+      <!-- Error Alert Banner -->
+      <div id="auth-error-banner" class="alert-banner alert-danger" style="display: none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="auth-error-text">Invalid email or password.</span>
+      </div>
+
+      <!-- Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email Address <span class="required">*</span></label>
+          <input type="email" id="login-email" class="form-control" placeholder="name@example.com" required autocomplete="email" />
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+            <label class="form-label" for="login-password" style="margin-bottom: 0;">Password <span class="required">*</span></label>
+            <a href="#" style="font-size: 0.8rem;" onclick="alert('For development testing, please use password: password123')">Forgot password?</a>
+          </div>
+          <div style="position: relative;">
+            <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required autocomplete="current-password" />
+            <button type="button" id="toggle-password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-subtle);">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="login-submit-btn" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1rem;">
+          Sign In
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Redirect if already logged in
+      window.FOODSHARE_AUTH.redirectIfLoggedIn();
+
+      let currentRole = 'donor';
+      const roleBtns = document.querySelectorAll('.role-tab-btn');
+      roleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          roleBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentRole = btn.dataset.role;
+        });
+      });
+
+      // Password toggle
+      const toggleBtn = document.getElementById('toggle-password');
+      const passInput = document.getElementById('login-password');
+      toggleBtn.addEventListener('click', () => {
+        const isPass = passInput.type === 'password';
+        passInput.type = isPass ? 'text' : 'password';
+      });
+
+      // Submit Form
+      const form = document.getElementById('login-form');
+      const errorBanner = document.getElementById('auth-error-banner');
+      const errorText = document.getElementById('auth-error-text');
+      const submitBtn = document.getElementById('login-submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorBanner.style.display = 'none';
+
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="spinner"></span> Signing in...`;
+
+        try {
+          const user = await window.FOODSHARE_AUTH.login(email, password);
+          window.FOODSHARE_UI.showToast('Login Successful', `Welcome back, ${user.name}!`, 'success');
+          
+          setTimeout(() => {
+            if (user.role === 'donor') {
+              window.location.href = 'donor-dashboard.html';
+            } else {
+              window.location.href = 'recipient-dashboard.html';
+            }
+          }, 400);
+        } catch (err) {
+          errorText.textContent = err.message || 'Login failed. Please verify your credentials.';
+          errorBanner.style.display = 'flex';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Sign In';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

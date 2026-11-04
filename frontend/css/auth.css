@@ -1,0 +1,161 @@
+/* ===================================================================
+   Foodshare - Authentication Page Styles (Login & Register)
+   =================================================================== */
+
+.auth-wrapper {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  background: radial-gradient(circle at 10% 20%, rgba(216, 243, 220, 0.4) 0%, rgba(248, 250, 248, 1) 90%);
+}
+
+.auth-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 520px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-card-wide {
+  max-width: 720px;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-title {
+  font-size: 1.85rem;
+  color: var(--primary-900);
+  margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Role Selector Switch */
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  background: var(--bg-surface-alt);
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.75rem;
+  border: 1px solid var(--border-light);
+}
+
+.role-tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.role-tab-btn.active {
+  background: white;
+  color: var(--primary-800);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+}
+
+/* Demo Credentials Helper Pill */
+.demo-accounts-box {
+  background: var(--primary-50);
+  border: 1px dashed var(--primary-300);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+}
+
+.demo-accounts-title {
+  font-weight: 700;
+  color: var(--primary-800);
+  margin-bottom: 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.demo-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.demo-pill-btn {
+  background: white;
+  border: 1px solid var(--primary-300);
+  border-radius: var(--radius-full);
+  padding: 0.3rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary-800);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.demo-pill-btn:hover {
+  background: var(--primary-700);
+  color: white;
+  border-color: var(--primary-700);
+}
+
+/* Location Map Picker */
+.location-picker-container {
+  height: 200px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-dark);
+  margin-top: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.location-picker-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Two Column Form Layout */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .auth-card {
+    padding: 1.75rem 1.25rem;
+  }
+}
+

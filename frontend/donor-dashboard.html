@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donor Dashboard – Foodshare</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body class="dashboard-layout">
+
+  <!-- Dashboard Top Header -->
+  <header class="dash-header">
+    <div class="dash-header-inner">
+      <a href="index.html" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
+        </div>
+        <span>Foodshare</span>
+      </a>
+
+      <div class="dash-user-controls">
+        <span class="role-tag-badge role-tag-donor">Food Donor</span>
+
+        <!-- Notification Bell -->
+        <div style="position: relative;">
+          <button id="notif-bell-btn" class="notif-bell-btn" aria-label="Notifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span id="notif-badge-count" class="notif-badge" style="display: none;">0</span>
+          </button>
+
+          <!-- Notification Dropdown Panel -->
+          <div id="notif-dropdown" class="notif-dropdown">
+            <div class="notif-header">
+              <div style="font-weight: 700; font-size: 0.95rem; color: var(--primary-900);">Notifications</div>
+              <button id="notif-mark-all" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 2px 8px;">Mark All Read</button>
+            </div>
+            <ul id="notif-list-container" class="notif-list">
+              <li style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">Loading...</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- User Profile Pill -->
+        <div class="user-profile-badge">
+          <div class="avatar-circle">D</div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.88rem; color: var(--primary-900);" class="donor-name-display">Donor Profile</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);" class="donor-org-display"></div>
+          </div>
+        </div>
+
+        <button id="logout-btn" class="btn btn-outline btn-sm" style="margin-left: 0.5rem;">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="container-wide" style="padding: 2rem 1.5rem; flex: 1;">
+    <!-- Welcome Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.75rem;">
+      <div>
+        <h1 style="font-size: 1.85rem; margin-bottom: 0.25rem;">Donor Portal</h1>
+        <p style="font-size: 0.95rem;">Manage active food donations, verify image integrity, and coordinate with recipients.</p>
+      </div>
+      <button id="header-new-donation-btn" type="button" class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Food Donation
+      </button>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-emerald">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="stat-active-listings">0</div>
+          <div class="stat-label">Active Listings</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-amber">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="stat-pending-requests">0</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="stat-total-donations">0</div>
+          <div class="stat-label">Total Donations</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrapper stat-icon-orange">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/></svg>
+        </div>
+        <div>
+          <div class="stat-val" id="stat-rescued-kg">0 kg</div>
+          <div class="stat-label">Food Rescued</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="dashboard-tabs">
+      <button class="tab-btn active" data-target="tab-my-listings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        My Food Listings
+      </button>
+
+      <button class="tab-btn" data-target="tab-requests">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        Incoming Requests
+      </button>
+
+      <button class="tab-btn" data-target="tab-create">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Create Food Donation
+      </button>
+    </div>
+
+    <!-- Tab 1: My Food Listings -->
+    <section id="tab-my-listings" class="dash-section">
+      <div class="listings-grid" id="my-listings-grid">
+        <div class="skeleton" style="height: 320px;"></div>
+        <div class="skeleton" style="height: 320px;"></div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Incoming Requests -->
+    <section id="tab-requests" class="dash-section" style="display: none;">
+      <div id="incoming-requests-list">
+        <div class="skeleton" style="height: 180px; margin-bottom: 1rem;"></div>
+        <div class="skeleton" style="height: 180px;"></div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Create Food Donation -->
+    <section id="tab-create" class="dash-section" style="display: none;">
+      <div class="card" style="max-width: 900px; margin: 0 auto;">
+        <div class="card-header">
+          <div>
+            <h3 style="font-size: 1.25rem;">Create New Food Donation</h3>
+            <p style="font-size: 0.85rem;">Provide accurate food details to enable intelligent AI matching and safe distribution.</p>
+          </div>
+        </div>
+
+        <form id="create-listing-form" class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="listing-title">Food Name / Title <span class="required">*</span></label>
+              <input type="text" id="listing-title" name="title" class="form-control" placeholder="e.g. Gourmet Mediterranean Bowls" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="listing-category">Category <span class="required">*</span></label>
+              <select id="listing-category" name="category" class="form-control form-select" required>
+                <option value="Cooked Meals">Cooked Meals</option>
+                <option value="Bakery">Bakery & Pastries</option>
+                <option value="Fresh Produce">Fresh Produce (Fruits & Vegetables)</option>
+                <option value="Dairy & Eggs">Dairy & Eggs</option>
+                <option value="Packaged & Canned">Packaged & Canned Goods</option>
+                <option value="Beverages">Beverages</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="listing-description">Description & Preparation Details</label>
+            <textarea id="listing-description" name="description" class="form-control" placeholder="Describe the ingredients, how it was prepared, and packaging..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="listing-quantity">Quantity / Portions Available <span class="required">*</span></label>
+              <input type="number" id="listing-quantity" name="quantity" class="form-control" min="1" max="1000" value="10" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="listing-unit">Unit Type</label>
+              <select id="listing-unit" name="unit" class="form-control form-select">
+                <option value="portions">Portions / Meals</option>
+                <option value="kg">Kilograms (kg)</option>
+                <option value="items">Items / Loaves / Units</option>
+                <option value="boxes">Boxes / Crates</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="listing-storage">Storage Condition</label>
+              <select id="listing-storage" name="storageCondition" class="form-control form-select">
+                <option value="ambient">Ambient / Room Temperature</option>
+                <option value="refrigerated">Refrigerated (Cold storage)</option>
+                <option value="frozen">Frozen</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- AI Image Integrity Upload Dropzone -->
+          <div class="form-group">
+            <label class="form-label">Food Photo & AI Vision Integrity Verification</label>
+            <div class="photo-upload-dropzone" id="photo-dropzone">
+              <input type="file" id="listing-photo-input" name="photo" accept="image/jpeg,image/png,image/webp" />
+              <div class="upload-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div style="font-weight: 600; font-size: 0.95rem; color: var(--primary-900);">Click or drag & drop photo here</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">JPEG, PNG, or WebP up to 5MB. AI will verify authenticity in real-time.</div>
+            </div>
+
+            <div id="image-preview-wrapper" class="image-preview-wrapper">
+              <img id="image-preview-img" src="" alt="Listing Preview" />
+            </div>
+
+            <div id="integrity-results-panel" style="display: none;"></div>
+          </div>
+
+          <!-- Dietary Tags -->
+          <div class="form-group">
+            <label class="form-label">Dietary Tags</label>
+            <div class="chip-group">
+              <label><input type="checkbox" class="chip-checkbox" name="dietaryTags" value="vegetarian" /><span class="chip-label">Vegetarian</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="dietaryTags" value="vegan" /><span class="chip-label">Vegan</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="dietaryTags" value="halal" /><span class="chip-label">Halal</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="dietaryTags" value="kosher" /><span class="chip-label">Kosher</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="dietaryTags" value="gluten-free" /><span class="chip-label">Gluten-Free</span></label>
+            </div>
+          </div>
+
+          <!-- Allergens -->
+          <div class="form-group">
+            <label class="form-label">Contains Allergens (Check all that apply)</label>
+            <div class="chip-group">
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="dairy" /><span class="chip-label">Dairy</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="peanuts" /><span class="chip-label">Peanuts</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="tree nuts" /><span class="chip-label">Tree Nuts</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="gluten" /><span class="chip-label">Gluten</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="soy" /><span class="chip-label">Soy</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="eggs" /><span class="chip-label">Eggs</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="seafood" /><span class="chip-label">Seafood</span></label>
+              <label><input type="checkbox" class="chip-checkbox" name="allergens" value="sesame" /><span class="chip-label">Sesame</span></label>
+            </div>
+          </div>
+
+          <!-- Expiry Deadline -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="listing-expiry">Expiry Deadline <span class="required">*</span></label>
+              <input type="datetime-local" id="listing-expiry" name="expiresAt" class="form-control" required />
+              <div class="form-hint">AI matching prioritizes items expiring sooner to prevent waste.</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Pickup Window (Times)</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" name="pickupWindowStart" class="form-control" placeholder="Start: 10:00 AM" value="11:00 AM" />
+                <input type="text" name="pickupWindowEnd" class="form-control" placeholder="End: 07:00 PM" value="06:00 PM" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Address & Instructions -->
+          <div class="form-group">
+            <label class="form-label" for="listing-address">Pickup Address & Instructions <span class="required">*</span></label>
+            <input type="text" id="listing-address" name="address" class="form-control" placeholder="Enter pickup address" required />
+            <input type="text" name="pickupInstructions" class="form-control" placeholder="Special pickup notes (e.g. 'Ring kitchen side bell or ask for manager')" style="margin-top: 0.5rem;" />
+            <input type="hidden" id="donor-lat" name="lat" value="40.7397" />
+            <input type="hidden" id="donor-lng" name="lng" value="-73.9918" />
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+            <button type="button" id="cancel-create-btn" class="btn btn-outline">Cancel</button>
+            <button type="submit" id="submit-listing-btn" class="btn btn-primary btn-lg">Publish Food Donation</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/donor.js"></script>
+</body>
+</html>
+
