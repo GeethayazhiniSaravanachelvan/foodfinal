@@ -2,9 +2,9 @@ services:
   # --------------------------------------------------------------------------
   # 1. Frontend: Render Static Site
   # --------------------------------------------------------------------------
-  - type: static
+  - type: web
     name: foodshare-frontend
-    buildCommand: ""
+    runtime: static
     staticPublishPath: ./frontend
     routes:
       - type: rewrite
@@ -16,7 +16,7 @@ services:
   # --------------------------------------------------------------------------
   - type: web
     name: foodshare-backend
-    env: node
+    runtime: node
     plan: free
     rootDir: backend
     buildCommand: npm install
@@ -46,7 +46,7 @@ services:
   # --------------------------------------------------------------------------
   - type: web
     name: foodshare-ml
-    env: python
+    runtime: python
     plan: free
     rootDir: ml
     buildCommand: pip install -r requirements.txt
@@ -55,4 +55,3 @@ services:
     envVars:
       - key: PORT
         value: 10000
-
