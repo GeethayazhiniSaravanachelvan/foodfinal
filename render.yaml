@@ -1,0 +1,57 @@
+services:
+  # --------------------------------------------------------------------------
+  # 1. Frontend: Render Static Site
+  # --------------------------------------------------------------------------
+  - type: static
+    name: foodshare-frontend
+    buildCommand: ""
+    staticPublishPath: ./frontend
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # --------------------------------------------------------------------------
+  # 2. Backend API: Render Web Service (Node.js + Express)
+  # --------------------------------------------------------------------------
+  - type: web
+    name: foodshare-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: ML_SERVICE_URL
+        fromService:
+          type: web
+          name: foodshare-ml
+          property: host
+      - key: CLIENT_URL
+        value: "*"
+
+  # --------------------------------------------------------------------------
+  # 3. ML Microservice: Render Web Service (Python + FastAPI)
+  # --------------------------------------------------------------------------
+  - type: web
+    name: foodshare-ml
+    env: python
+    plan: free
+    rootDir: ml
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000

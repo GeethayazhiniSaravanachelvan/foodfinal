@@ -43,6 +43,15 @@ class ImageVerifyPayload(BaseModel):
     imageBase64: Optional[str] = None
     existingHashes: Optional[List[Dict[str, Any]]] = None
 
+@app.get("/")
+def root():
+    return {
+        "status": "online",
+        "service": "Foodshare ML Matching & Integrity Microservice",
+        "health": "/health",
+        "version": "1.0.0"
+    }
+
 @app.get("/health")
 def health_check():
     return {

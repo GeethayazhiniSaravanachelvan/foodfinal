@@ -33,6 +33,22 @@ if (process.env.NODE_ENV !== 'production') {
 // Serve uploaded static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Root service info endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'Foodshare Backend API',
+    status: 'online',
+    health: '/api/health',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Alias /health to /api/health for Render
+app.get('/health', (req, res) => {
+  res.redirect(301, '/api/health');
+});
+
 // Health check endpoint (checks MongoDB connection state)
 app.get('/api/health', (req, res) => {
   const isDbReady = mongoose.connection.readyState === 1;
