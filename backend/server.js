@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -32,6 +33,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Serve uploaded static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Serve frontend static files if present in the repository
+const frontendDir = path.join(__dirname, '..', 'frontend');
+if (fs.existsSync(frontendDir)) {
+  app.use(express.static(frontendDir));
+}
 
 // Root service info endpoint
 app.get('/', (req, res) => {
@@ -82,6 +89,18 @@ app.use('/api/matching', require('./routes/matchingRoutes'));
 app.use('/api/integrity', require('./routes/integrityRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/impact', require('./routes/impactRoutes'));
+
+// Serve index.html for client-side pages (login, dashboard, register, etc.)
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+    return next();
+  }
+  const indexPath = path.join(__dirname, '..', 'frontend', 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  next();
+});
 
 // 404 Handler for undefined API routes
 app.use('/api/*', (req, res) => {
