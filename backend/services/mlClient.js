@@ -1,10 +1,10 @@
 const axios = require('axios');
 
-let rawMlUrl = process.env.ML_SERVICE_URL || 'http://127.0.0.1:5001';
+let rawMlUrl = process.env.ML_SERVICE_URL || (process.env.NODE_ENV === 'production' ? 'https://foodshare-ml.onrender.com' : 'http://127.0.0.1:5001');
 if (rawMlUrl && !rawMlUrl.startsWith('http://') && !rawMlUrl.startsWith('https://')) {
   rawMlUrl = `https://${rawMlUrl}`;
 }
-const ML_SERVICE_URL = rawMlUrl ? rawMlUrl.replace(/\/+$/, '') : 'http://127.0.0.1:5001';
+const ML_SERVICE_URL = rawMlUrl ? rawMlUrl.replace(/\/+$/, '') : 'https://foodshare-ml.onrender.com';
 
 // Haversine distance in km
 function haversineDistanceKm(lat1, lon1, lat2, lon2) {

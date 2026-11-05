@@ -21,18 +21,8 @@ function getApiBaseUrl() {
     return `http://${currentHost}:5000/api`;
   }
 
-  // 4. If deployed on Render:
-  // e.g. foodshare-frontend.onrender.com -> https://foodshare-backend.onrender.com/api
-  if (currentHost.includes('.onrender.com')) {
-    const backendHost = currentHost.replace(/(-frontend|-client|-ui)/, '-backend');
-    if (backendHost !== currentHost) {
-      return `https://${backendHost}/api`;
-    }
-    return 'https://foodshare-backend.onrender.com/api';
-  }
-
-  // 5. Default relative path
-  return '/api';
+  // 4. Production deployment on Render
+  return 'https://foodshare-backend-0zwf.onrender.com/api';
 }
 
 const API_BASE_URL = getApiBaseUrl();
