@@ -130,6 +130,7 @@ async function loadAiRecommendations() {
 
     const res = await window.FOODSHARE_API.get('/matching/recommendations', params);
     if (res.success && res.recommendations && res.recommendations.length > 0) {
+      window._aiRecommendations = res.recommendations;
       container.innerHTML = res.recommendations
         .map((rec) => {
           const item = rec.listing;
@@ -336,8 +337,9 @@ function initRequestModal() {
       submitBtn.innerHTML = `<span class="spinner"></span> Submitting...`;
 
       try {
+        const targetListingId = selectedListingForRequest._id || selectedListingForRequest.id;
         const payload = {
-          listingId: selectedListingForRequest._id,
+          listingId: targetListingId,
           requestedPortions: parseInt(portionInput.value, 10),
           estimatedPickupTime: document.getElementById('req-pickup-time').value,
           notes: document.getElementById('req-notes').value,
@@ -366,8 +368,20 @@ function initRequestModal() {
   }
 }
 
-window.openRequestPortionModal = function (listingId) {
-  const listing = activeListingsData.find((l) => String(l._id || l.id) === String(listingId));
+window.openRequestPortionModal = async function (listingId) {
+  let listing = (activeListingsData || []).find((l) => String(l._id || l.id) === String(listingId));
+  if (!listing && window._aiRecommendations) {
+    const rec = window._aiRecommendations.find(
+      (r) => String(r.listing?._id || r.listing?.id || r.listingId) === String(listingId)
+    );
+    if (rec && rec.listing) listing = rec.listing;
+  }
+  if (!listing) {
+    try {
+      const fetched = await window.FOODSHARE_API.get(`/listings/${listingId}`);
+      if (fetched && fetched.listing) listing = fetched.listing;
+    } catch (e) {}
+  }
   if (!listing) return;
 
   selectedListingForRequest = listing;

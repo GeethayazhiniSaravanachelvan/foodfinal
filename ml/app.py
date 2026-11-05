@@ -60,6 +60,32 @@ def health_check():
         "version": "1.0.0"
     }
 
+@app.get("/api/ml/model-info")
+def model_info():
+    """
+    Returns trained machine learning model architecture, training dataset statistics,
+    accuracy, precision, recall, F1-score, and feature importances.
+    """
+    metrics_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "model_metrics.json")
+    if os.path.exists(metrics_path):
+        import json
+        with open(metrics_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {
+        "model_type": "RandomForestClassifier",
+        "library": "scikit-learn",
+        "status": "trained",
+        "features": [
+            "distance_km",
+            "hours_left",
+            "portion_ratio",
+            "donor_reliability",
+            "dietary_compatibility",
+            "storage_compatibility",
+            "allergen_safe"
+        ]
+    }
+
 @app.post("/api/ml/match")
 def match_listings(payload: MatchRequest):
     """

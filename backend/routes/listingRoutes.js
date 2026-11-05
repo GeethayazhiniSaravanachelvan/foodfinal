@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const FoodListing = require('../models/FoodListing');
 const DonationRequest = require('../models/DonationRequest');
@@ -231,16 +232,36 @@ router.post('/', protect, authorize('donor'), upload.single('photo'), async (req
       reasons: ['Initial verification passed'],
       message: 'Verified photo',
     };
-    let imageHash = { dHash: null, aHash: null };
+    let imageHash = { dHash: null, aHash: null, sha256: null };
 
-    // If an image file was uploaded, run integrity check
+    // If an image file was uploaded, run integrity & duplicate check
     if (req.file) {
       finalImageUrl = `/uploads/${req.file.filename}`;
       const filePath = req.file.path;
-      const b64 = fileToBase64(filePath);
+      const fileData = fs.readFileSync(filePath);
+      const b64 = fileData.toString('base64');
+      const fileHash = crypto.createHash('sha256').update(fileData).digest('hex');
+      imageHash.sha256 = fileHash;
+
+      // 1. Strict exact file duplicate check against all existing listings
+      const exactDuplicate = await FoodListing.findOne(
+        { 'imageHash.sha256': fileHash },
+        { title: 1 }
+      );
+
+      if (exactDuplicate) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch (e) {}
+        return res.status(400).json({
+          success: false,
+          duplicateDetected: true,
+          message: `Duplicate image detected! This exact photo has already been uploaded for donation "${exactDuplicate.title}". Reusing old or duplicate photos is not permitted. Please upload a fresh photo.`,
+        });
+      }
 
       if (b64) {
-        // Fetch existing hashes from recent listings to detect duplicates
+        // Fetch existing perceptual hashes from recent listings
         const recentListings = await FoodListing.find(
           { 'imageHash.dHash': { $ne: null } },
           { 'imageHash.dHash': 1 }
@@ -258,6 +279,23 @@ router.post('/', protect, authorize('donor'), upload.single('photo'), async (req
         }
         if (integrityResult.aHash) {
           imageHash.aHash = integrityResult.aHash;
+        }
+
+        // 2. Reject if ML service detects duplicate visual hash
+        if (
+          integrityResult.duplicateDetected ||
+          (integrityResult.flags && integrityResult.flags.includes('DUPLICATE_SUSPECTED'))
+        ) {
+          try {
+            fs.unlinkSync(filePath);
+          } catch (e) {}
+          return res.status(400).json({
+            success: false,
+            duplicateDetected: true,
+            message:
+              integrityResult.message ||
+              'Duplicate image detected! This photo is too visually similar to an existing food donation. Please upload an authentic, fresh photo.',
+          });
         }
       }
     }

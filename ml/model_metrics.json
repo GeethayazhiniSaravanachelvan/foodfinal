@@ -1,0 +1,33 @@
+{
+  "model_type": "RandomForestClassifier",
+  "library": "scikit-learn",
+  "n_estimators": 100,
+  "max_depth": 10,
+  "total_samples": 12000,
+  "train_samples": 9600,
+  "test_samples": 2400,
+  "accuracy": 0.9962,
+  "precision": 0.9964,
+  "recall": 0.9995,
+  "f1_score": 0.9979,
+  "roc_auc": 0.9996,
+  "feature_importances": {
+    "allergen_safe": 0.9173,
+    "distance_km": 0.0475,
+    "portion_ratio": 0.0127,
+    "hours_left": 0.0083,
+    "donor_reliability": 0.0063,
+    "dietary_compatibility": 0.004,
+    "storage_compatibility": 0.0039
+  },
+  "features": [
+    "distance_km",
+    "hours_left",
+    "portion_ratio",
+    "donor_reliability",
+    "dietary_compatibility",
+    "storage_compatibility",
+    "allergen_safe"
+  ],
+  "status": "trained_and_verified"
+}

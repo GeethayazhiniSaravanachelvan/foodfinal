@@ -94,6 +94,7 @@ const foodListingSchema = new mongoose.Schema(
     imageHash: {
       dHash: { type: String, default: null },
       aHash: { type: String, default: null },
+      sha256: { type: String, default: null },
     },
     imageIntegrity: {
       verified: { type: Boolean, default: true },
